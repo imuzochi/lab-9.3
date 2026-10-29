@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type ChangeEvent } from 'react'
 import type { TaskFilterProps, TaskStatus } from '../../types'
 
 type TaskPriority = 'low' | 'medium' | 'high'
@@ -7,28 +7,31 @@ function TaskFilter({ onFilterChange }: TaskFilterProps) {
   const [status, setStatus] = useState<TaskStatus | ''>('')
   const [priority, setPriority] = useState<TaskPriority | ''>('')
 
-  function updateFilters(
-    nextStatus: TaskStatus | '',
-    nextPriority: TaskPriority | '',
-  ) {
-    onFilterChange({
-      ...(nextStatus && { status: nextStatus }),
-      ...(nextPriority && { priority: nextPriority }),
-    })
+  function handleStatusChange(event: ChangeEvent<HTMLSelectElement>) {
+    const newStatus = event.target.value as TaskStatus | ''
+    setStatus(newStatus)
+
+    const filters: { status?: TaskStatus; priority?: TaskPriority } = {}
+    if (newStatus) filters.status = newStatus
+    if (priority) filters.priority = priority
+    onFilterChange(filters)
+  }
+
+  function handlePriorityChange(event: ChangeEvent<HTMLSelectElement>) {
+    const newPriority = event.target.value as TaskPriority | ''
+    setPriority(newPriority)
+
+    const filters: { status?: TaskStatus; priority?: TaskPriority } = {}
+    if (status) filters.status = status
+    if (newPriority) filters.priority = newPriority
+    onFilterChange(filters)
   }
 
   return (
     <div>
       <label>
         Filter by status
-        <select
-          value={status}
-          onChange={(event) => {
-            const nextStatus = event.target.value as TaskStatus | ''
-            setStatus(nextStatus)
-            updateFilters(nextStatus, priority)
-          }}
-        >
+        <select value={status} onChange={handleStatusChange}>
           <option value="">All statuses</option>
           <option value="pending">Pending</option>
           <option value="in-progress">In progress</option>
@@ -38,14 +41,7 @@ function TaskFilter({ onFilterChange }: TaskFilterProps) {
 
       <label>
         Filter by priority
-        <select
-          value={priority}
-          onChange={(event) => {
-            const nextPriority = event.target.value as TaskPriority | ''
-            setPriority(nextPriority)
-            updateFilters(status, nextPriority)
-          }}
-        >
+        <select value={priority} onChange={handlePriorityChange}>
           <option value="">All priorities</option>
           <option value="low">Low</option>
           <option value="medium">Medium</option>
