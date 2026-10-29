@@ -28,7 +28,7 @@ function TaskFilter({ onFilterChange }: TaskFilterProps) {
   }
 
   return (
-    <div>
+    <div className="task-filters">
       <label>
         Filter by status
         <select value={status} onChange={handleStatusChange}>
