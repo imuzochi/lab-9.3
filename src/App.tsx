@@ -59,7 +59,7 @@ function App() {
   }
 
   return (
-    <main>
+    <main className="task-manager">
       <h1>Task Manager</h1>
       <TaskFilter onFilterChange={setFilters} />
       <TaskList
